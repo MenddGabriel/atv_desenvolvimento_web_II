@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "nome": "Tech Sul Ltda",
+    "cnpj": "12345678000190",
+    "email": "contato@techsul.com",
+    "telefone": "4834310000",
+    "endereco": "Rua das Flores, 100 - Centro, Criciúma/SC",
+    "dataCadastro": "2026-09-20"
+  },
+  {
+    "id": 2,
+    "nome": "Coworking Criciúma",
+    "cnpj": "98765432000110",
+    "email": "ola@coworkingcriciuma.com",
+    "telefone": "4834320000",
+    "endereco": "Av. Centenário, 2500 - Santa Bárbara, Criciúma/SC",
+    "dataCadastro": "2026-09-22"
+  },
+  {
+    "id": 3,
+    "nome": "Eventos Sul Produções",
+    "cnpj": "11222333000144",
+    "email": "eventos@eventossul.com",
+    "telefone": "4834330000",
+    "endereco": "Rua Henrique Lage, 50 - Centro, Criciúma/SC",
+    "dataCadastro": "2026-09-22"
+  }
+]
