@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nome": "Sala de Coworking 01",
+    "tipo": "COWORKING",
+    "capacidade": 10,
+    "descricao": "Sala compartilhada com mesas individuais e internet rápida.",
+    "ativo": true
+  },
+  {
+    "id": 2,
+    "nome": "Laboratório de Informática",
+    "tipo": "LAB",
+    "capacidade": 20,
+    "descricao": "Laboratório com 20 computadores e projetor.",
+    "ativo": true
+  },
+  {
+    "id": 3,
+    "nome": "Sala de Reuniões Executiva",
+    "tipo": "MEETING_ROOM",
+    "capacidade": 6,
+    "descricao": "Sala de reuniões com TV e videoconferência.",
+    "ativo": false
+  }
+]
