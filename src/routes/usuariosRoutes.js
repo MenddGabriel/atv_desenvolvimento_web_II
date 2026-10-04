@@ -238,7 +238,7 @@ router.get('/:id', (req, res) => {
  *               $ref: '#/components/schemas/Erro'
  */
 router.post('/', (req, res) => {
-  const { nome, email, senha, telefone } = req.body;
+  const { nome, email, senha, telefone } = req.body || {};
 
   if (!nome || !email || !senha) {
     return res.status(400).json({ mensagem: 'Nome, email e senha são obrigatórios' });
@@ -316,7 +316,7 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ mensagem: 'Usuário não encontrado' });
   }
 
-  const { nome, email, senha, telefone } = req.body;
+  const { nome, email, senha, telefone } = req.body || {};
 
   if (email && usuarios.some((u) => u.email === email && u.id !== id)) {
     return res.status(409).json({ mensagem: 'E-mail já cadastrado para outro usuário' });

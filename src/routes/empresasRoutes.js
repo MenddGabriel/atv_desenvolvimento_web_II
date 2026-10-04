@@ -274,13 +274,13 @@ router.get('/:id', (req, res) => {
  *               $ref: '#/components/schemas/Erro'
  */
 router.post('/', (req, res) => {
-  const { nome, email, telefone, endereco } = req.body;
+  const { nome, cnpj: cnpjEnviado, email, telefone, endereco } = req.body || {};
 
-  if (!nome || !req.body.cnpj) {
+  if (!nome || !cnpjEnviado) {
     return res.status(400).json({ mensagem: 'Nome e CNPJ são obrigatórios' });
   }
 
-  const cnpj = limparCnpj(req.body.cnpj);
+  const cnpj = limparCnpj(cnpjEnviado);
 
   if (cnpj.length !== 14) {
     return res.status(400).json({ mensagem: 'CNPJ deve ter 14 números' });
@@ -365,11 +365,11 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ mensagem: 'Empresa não encontrada' });
   }
 
-  const { nome, email, telefone, endereco } = req.body;
+  const { nome, cnpj: cnpjEnviado, email, telefone, endereco } = req.body || {};
   let cnpj;
 
-  if (req.body.cnpj !== undefined) {
-    cnpj = limparCnpj(req.body.cnpj);
+  if (cnpjEnviado !== undefined) {
+    cnpj = limparCnpj(cnpjEnviado);
 
     if (cnpj.length !== 14) {
       return res.status(400).json({ mensagem: 'CNPJ deve ter 14 números' });

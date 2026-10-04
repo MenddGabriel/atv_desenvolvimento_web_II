@@ -149,7 +149,7 @@ router.get('/:id', (req, res) => {
  *         description: Campos obrigatórios faltando
  */
 router.post('/', (req, res) => {
-  const { nome, tipo, capacidade, descricao, ativo } = req.body;
+  const { nome, tipo, capacidade, descricao, ativo } = req.body || {};
 
   if (!nome || !tipo || capacidade === undefined) {
     return res.status(400).json({ mensagem: 'Nome, tipo e capacidade são obrigatórios' });
@@ -216,7 +216,7 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ mensagem: 'Espaço não encontrado' });
   }
 
-  const { nome, tipo, capacidade, descricao, ativo } = req.body;
+  const { nome, tipo, capacidade, descricao, ativo } = req.body || {};
 
   const atualizado = {
     ...espacos[indice],

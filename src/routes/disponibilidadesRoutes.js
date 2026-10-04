@@ -215,7 +215,7 @@ router.get('/:id', (req, res) => {
  *         description: Já existe disponibilidade para este espaço neste dia e horário
  */
 router.post('/', (req, res) => {
-    const { space_id, dia_semana, hora_inicio, hora_fim, permite_externo } = req.body;
+    const { space_id, dia_semana, hora_inicio, hora_fim, permite_externo } = req.body || {};
 
     if (space_id === undefined || dia_semana === undefined || !hora_inicio || !hora_fim) {
         return res.status(400).json({
@@ -321,7 +321,7 @@ router.put('/:id', (req, res) => {
         return res.status(404).json({ mensagem: 'Disponibilidade não encontrada' });
     }
 
-    const { space_id, dia_semana, hora_inicio, hora_fim, permite_externo } = req.body;
+    const { space_id, dia_semana, hora_inicio, hora_fim, permite_externo } = req.body || {};
 
     if (space_id !== undefined) {
         const espaco = buscarEspaco(space_id);
