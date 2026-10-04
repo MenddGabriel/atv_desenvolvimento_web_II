@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "space_id": 1,
+    "user_id": 1,
+    "empresa_id": null,
+    "data": "2026-10-13",
+    "hora_inicio": "14:00",
+    "hora_fim": "16:00",
+    "status": "CONFIRMADA",
+    "dataCadastro": "2026-10-04"
+  }
+]
