@@ -1,26 +1,26 @@
 [
   {
     "id": 1,
-    "space_id": 1,
-    "dia_semana": 1,
-    "hora_inicio": "08:00",
-    "hora_fim": "18:00",
-    "permite_externo": true
+    "espacoId": 1,
+    "diaSemana": 1,
+    "horaInicio": "08:00",
+    "horaFim": "18:00",
+    "permiteExterno": true
   },
   {
     "id": 2,
-    "space_id": 1,
-    "dia_semana": 2,
-    "hora_inicio": "08:00",
-    "hora_fim": "18:00",
-    "permite_externo": true
+    "espacoId": 1,
+    "diaSemana": 2,
+    "horaInicio": "08:00",
+    "horaFim": "18:00",
+    "permiteExterno": true
   },
   {
     "id": 3,
-    "space_id": 2,
-    "dia_semana": 3,
-    "hora_inicio": "14:00",
-    "hora_fim": "22:00",
-    "permite_externo": false
+    "espacoId": 2,
+    "diaSemana": 3,
+    "horaInicio": "14:00",
+    "horaFim": "22:00",
+    "permiteExterno": false
   }
 ]

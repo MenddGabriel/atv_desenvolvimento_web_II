@@ -46,7 +46,7 @@ function diaDaSemana(data) {
 
 // Ordena por data e, no mesmo dia, pelo horário de início
 function ordenarPorDataHora(a, b) {
-  return a.data.localeCompare(b.data) || a.hora_inicio.localeCompare(b.hora_inicio);
+  return a.data.localeCompare(b.data) || a.horaInicio.localeCompare(b.horaInicio);
 }
 
 /**
@@ -55,17 +55,17 @@ function ordenarPorDataHora(a, b) {
  * idIgnorar: id da própria reserva (usado no PUT para não conflitar consigo mesma).
  */
 function validarReserva(r, idIgnorar = null) {
-  const espaco = lerJson(caminhoEspacos).find((e) => e.id === r.space_id);
+  const espaco = lerJson(caminhoEspacos).find((e) => e.id === r.espacoId);
   if (!espaco) return { status: 404, mensagem: 'Espaço não encontrado' };
   if (!espaco.ativo) {
     return { status: 400, mensagem: 'Não é possível reservar um espaço inativo' };
   }
 
-  if (!lerJson(caminhoUsuarios).some((u) => u.id === r.user_id)) {
+  if (!lerJson(caminhoUsuarios).some((u) => u.id === r.usuarioId)) {
     return { status: 404, mensagem: 'Usuário não encontrado' };
   }
 
-  if (r.empresa_id !== null && !lerJson(caminhoEmpresas).some((e) => e.id === r.empresa_id)) {
+  if (r.empresaId !== null && !lerJson(caminhoEmpresas).some((e) => e.id === r.empresaId)) {
     return { status: 404, mensagem: 'Empresa não encontrada' };
   }
 
@@ -73,12 +73,12 @@ function validarReserva(r, idIgnorar = null) {
     return { status: 400, mensagem: 'data deve estar no formato AAAA-MM-DD e ser válida' };
   }
 
-  if (!horaValida(r.hora_inicio) || !horaValida(r.hora_fim)) {
+  if (!horaValida(r.horaInicio) || !horaValida(r.horaFim)) {
     return { status: 400, mensagem: 'Horários devem estar no formato HH:MM' };
   }
 
-  if (r.hora_inicio >= r.hora_fim) {
-    return { status: 400, mensagem: 'hora_inicio deve ser anterior a hora_fim' };
+  if (r.horaInicio >= r.horaFim) {
+    return { status: 400, mensagem: 'horaInicio deve ser anterior a horaFim' };
   }
 
   if (!STATUS_VALIDOS.includes(r.status)) {
@@ -92,10 +92,10 @@ function validarReserva(r, idIgnorar = null) {
   const dia = diaDaSemana(r.data);
   const disponibilidade = lerJson(caminhoDisponibilidades).find(
     (d) =>
-      d.space_id === r.space_id &&
-      d.dia_semana === dia &&
-      r.hora_inicio >= d.hora_inicio &&
-      r.hora_fim <= d.hora_fim
+      d.espacoId === r.espacoId &&
+      d.diaSemana === dia &&
+      r.horaInicio >= d.horaInicio &&
+      r.horaFim <= d.horaFim
   );
 
   if (!disponibilidade) {
@@ -106,10 +106,10 @@ function validarReserva(r, idIgnorar = null) {
   }
 
   // Externo = reserva feita sem empresa vinculada
-  if (!disponibilidade.permite_externo && r.empresa_id === null) {
+  if (!disponibilidade.permiteExterno && r.empresaId === null) {
     return {
       status: 403,
-      mensagem: 'Esta disponibilidade não permite reservas externas (informe empresa_id)',
+      mensagem: 'Esta disponibilidade não permite reservas externas (informe empresaId)',
     };
   }
 
@@ -118,10 +118,10 @@ function validarReserva(r, idIgnorar = null) {
     (o) =>
       o.id !== idIgnorar &&
       o.status === 'CONFIRMADA' &&
-      o.space_id === r.space_id &&
+      o.espacoId === r.espacoId &&
       o.data === r.data &&
-      r.hora_inicio < o.hora_fim &&
-      r.hora_fim > o.hora_inicio
+      r.horaInicio < o.horaFim &&
+      r.horaFim > o.horaInicio
   );
 
   if (conflito) {
@@ -145,13 +145,13 @@ function validarReserva(r, idIgnorar = null) {
  *         id:
  *           type: integer
  *           example: 1
- *         space_id:
+ *         espacoId:
  *           type: integer
  *           example: 1
- *         user_id:
+ *         usuarioId:
  *           type: integer
  *           example: 1
- *         empresa_id:
+ *         empresaId:
  *           type: integer
  *           nullable: true
  *           example: null
@@ -159,10 +159,10 @@ function validarReserva(r, idIgnorar = null) {
  *           type: string
  *           format: date
  *           example: "2026-10-13"
- *         hora_inicio:
+ *         horaInicio:
  *           type: string
  *           example: "09:00"
- *         hora_fim:
+ *         horaFim:
  *           type: string
  *           example: "11:00"
  *         status:
@@ -176,19 +176,19 @@ function validarReserva(r, idIgnorar = null) {
  *     ReservaInput:
  *       type: object
  *       required:
- *         - space_id
- *         - user_id
+ *         - espacoId
+ *         - usuarioId
  *         - data
- *         - hora_inicio
- *         - hora_fim
+ *         - horaInicio
+ *         - horaFim
  *       properties:
- *         space_id:
+ *         espacoId:
  *           type: integer
  *           example: 1
- *         user_id:
+ *         usuarioId:
  *           type: integer
  *           example: 1
- *         empresa_id:
+ *         empresaId:
  *           type: integer
  *           nullable: true
  *           description: Opcional. Sem empresa a reserva é considerada externa
@@ -197,10 +197,10 @@ function validarReserva(r, idIgnorar = null) {
  *           type: string
  *           format: date
  *           example: "2026-10-13"
- *         hora_inicio:
+ *         horaInicio:
  *           type: string
  *           example: "09:00"
- *         hora_fim:
+ *         horaFim:
  *           type: string
  *           example: "11:00"
  *         status:
@@ -266,13 +266,13 @@ router.get('/data/:data', (req, res) => {
 
 /**
  * @swagger
- * /reservas/espaco/{space_id}:
+ * /reservas/espaco/{espacoId}:
  *   get:
  *     summary: Lista as reservas de um espaço
  *     tags: [Reservas]
  *     parameters:
  *       - in: path
- *         name: space_id
+ *         name: espacoId
  *         required: true
  *         schema:
  *           type: integer
@@ -293,15 +293,15 @@ router.get('/data/:data', (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Erro'
  */
-router.get('/espaco/:space_id', (req, res) => {
-  const space_id = Number(req.params.space_id);
+router.get('/espaco/:espacoId', (req, res) => {
+  const espacoId = Number(req.params.espacoId);
 
-  if (!lerJson(caminhoEspacos).some((e) => e.id === space_id)) {
+  if (!lerJson(caminhoEspacos).some((e) => e.id === espacoId)) {
     return res.status(404).json({ mensagem: 'Espaço não encontrado' });
   }
 
   const reservas = lerReservas()
-    .filter((r) => r.space_id === space_id)
+    .filter((r) => r.espacoId === espacoId)
     .sort(ordenarPorDataHora);
 
   res.json(reservas);
@@ -309,13 +309,13 @@ router.get('/espaco/:space_id', (req, res) => {
 
 /**
  * @swagger
- * /reservas/usuario/{user_id}:
+ * /reservas/usuario/{usuarioId}:
  *   get:
  *     summary: Lista as reservas de um usuário
  *     tags: [Reservas]
  *     parameters:
  *       - in: path
- *         name: user_id
+ *         name: usuarioId
  *         required: true
  *         schema:
  *           type: integer
@@ -336,15 +336,15 @@ router.get('/espaco/:space_id', (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/Erro'
  */
-router.get('/usuario/:user_id', (req, res) => {
-  const user_id = Number(req.params.user_id);
+router.get('/usuario/:usuarioId', (req, res) => {
+  const usuarioId = Number(req.params.usuarioId);
 
-  if (!lerJson(caminhoUsuarios).some((u) => u.id === user_id)) {
+  if (!lerJson(caminhoUsuarios).some((u) => u.id === usuarioId)) {
     return res.status(404).json({ mensagem: 'Usuário não encontrado' });
   }
 
   const reservas = lerReservas()
-    .filter((r) => r.user_id === user_id)
+    .filter((r) => r.usuarioId === usuarioId)
     .sort(ordenarPorDataHora);
 
   res.json(reservas);
@@ -433,21 +433,21 @@ router.get('/:id', (req, res) => {
  *               $ref: '#/components/schemas/Erro'
  */
 router.post('/', (req, res) => {
-  const { space_id, user_id, empresa_id, data, hora_inicio, hora_fim, status } = req.body || {};
+  const { espacoId, usuarioId, empresaId, data, horaInicio, horaFim, status } = req.body || {};
 
-  if (space_id === undefined || user_id === undefined || !data || !hora_inicio || !hora_fim) {
+  if (espacoId === undefined || usuarioId === undefined || !data || !horaInicio || !horaFim) {
     return res.status(400).json({
-      mensagem: 'space_id, user_id, data, hora_inicio e hora_fim são obrigatórios',
+      mensagem: 'espacoId, usuarioId, data, horaInicio e horaFim são obrigatórios',
     });
   }
 
   const novaReserva = {
-    space_id: Number(space_id),
-    user_id: Number(user_id),
-    empresa_id: empresa_id === undefined || empresa_id === null ? null : Number(empresa_id),
+    espacoId: Number(espacoId),
+    usuarioId: Number(usuarioId),
+    empresaId: empresaId === undefined || empresaId === null ? null : Number(empresaId),
     data,
-    hora_inicio,
-    hora_fim,
+    horaInicio,
+    horaFim,
     status: status !== undefined ? status : 'CONFIRMADA',
   };
 
@@ -533,18 +533,18 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ mensagem: 'Reserva não encontrada' });
   }
 
-  const { space_id, user_id, empresa_id, data, hora_inicio, hora_fim, status } = req.body || {};
+  const { espacoId, usuarioId, empresaId, data, horaInicio, horaFim, status } = req.body || {};
 
   // Mantém os valores antigos para os campos que não vieram no body.
   // id e dataCadastro não podem ser alterados.
   const atualizada = {
     ...reservas[indice],
-    ...(space_id !== undefined && { space_id: Number(space_id) }),
-    ...(user_id !== undefined && { user_id: Number(user_id) }),
-    ...(empresa_id !== undefined && { empresa_id: empresa_id === null ? null : Number(empresa_id) }),
+    ...(espacoId !== undefined && { espacoId: Number(espacoId) }),
+    ...(usuarioId !== undefined && { usuarioId: Number(usuarioId) }),
+    ...(empresaId !== undefined && { empresaId: empresaId === null ? null : Number(empresaId) }),
     ...(data !== undefined && { data }),
-    ...(hora_inicio !== undefined && { hora_inicio }),
-    ...(hora_fim !== undefined && { hora_fim }),
+    ...(horaInicio !== undefined && { horaInicio }),
+    ...(horaFim !== undefined && { horaFim }),
     ...(status !== undefined && { status }),
   };
 
